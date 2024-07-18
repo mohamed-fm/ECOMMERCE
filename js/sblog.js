@@ -153,3 +153,13 @@
         // blog contenar append childs
         blog_contenar.appendChild(blog_div)
     }
+
+
+
+
+
+
+
+
+
+    

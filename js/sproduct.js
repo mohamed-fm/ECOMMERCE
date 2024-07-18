@@ -95,3 +95,78 @@ try{
 }
 fetch_data()
 
+
+
+
+let products = document.querySelectorAll('.products ul li')
+
+
+
+//get the clicked element information
+
+
+
+let currentTarget  ; 
+
+
+function Handle_Clicked_Product(){
+    products.forEach(function(e,index){
+        e.addEventListener('click',function(e){
+            currentTarget = {
+                target_name:e.currentTarget.querySelector('.about-product').querySelector('h5').textContent,
+                main_img:e.currentTarget.firstElementChild.firstElementChild.src,
+                product_imgs:Array.from(document.querySelectorAll('.products ul li'))
+                .map((li)=>{
+                    if( index+4 > document.querySelectorAll('.products ul li').length -1){
+                        index = 0 
+                    }
+                    return li.firstElementChild.firstElementChild.src
+                }).slice(index,index+4),
+                price:e.currentTarget.querySelector('.cart-price').querySelector('h4').textContent
+            }
+            //store the information in localStorage
+            localStorage.setItem('current',JSON.stringify(currentTarget))
+            //change the location href to the product page
+            window.location = './sproduct.html'
+        })
+    })
+    Handle_single_Product_Page()
+    galary()
+}
+
+
+
+//add the information about every selected
+
+
+function Handle_single_Product_Page(){
+    let currentTarget  = localStorage.getItem('current')
+    currentTarget = JSON.parse(currentTarget)
+        let product_name = document.querySelector('#product-name')
+        let main_img = document.querySelector('#main-img')
+        let product_imgs = document.querySelectorAll('.other-imges img')
+        let price = document.querySelector('#price')
+        let number_of_pecies = document.querySelector('#number')
+        price.textContent = `$${parseInt(currentTarget.price.slice(1,3)) * parseInt(number_of_pecies.value)}`
+        number_of_pecies.oninput = function(){
+            if(number_of_pecies.value>=1){
+                price.textContent = `$${parseInt(currentTarget.price.slice(1,3)) * parseInt(number_of_pecies.value)}`
+            }else{
+                price.textContent = `$${0}`
+            }
+        }
+        product_name.textContent = currentTarget.target_name
+        main_img.src = currentTarget.main_img
+        product_imgs.forEach((img,index)=>img.src = currentTarget.product_imgs[index])
+}
+Handle_Clicked_Product()
+//Make The Galary
+function galary(){
+    const imgs = document.querySelectorAll('.other-imges img')
+    const main_image = document.querySelector('#main-img')
+    imgs.forEach((imgs)=>{
+        imgs.addEventListener('click',(img)=> {
+            main_image.src = img.target.src
+        })
+    })
+}
